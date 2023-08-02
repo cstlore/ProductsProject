@@ -82,10 +82,12 @@ export const List = () => {
             document.querySelector('#blur1').style.filter = 'blur(12px)'
             document.querySelector('#blur2').style.filter = 'blur(12px)'
             document.querySelector('#blur3').style.filter = 'blur(12px)'
+            document.querySelector('#adminmenu').style.filter = 'blur(12px)'
         } else {
             document.querySelector('#blur1').style.filter = 'blur(0px)'
             document.querySelector('#blur2').style.filter = 'blur(0px)'
             document.querySelector('#blur3').style.filter = 'blur(0px)'
+            document.querySelector('#adminmenu').style.filter = 'blur(0px)'
         }
     }, [request])
     return (
@@ -306,11 +308,15 @@ export const List = () => {
                                 })
                                 await send_request('http://localhost:5000/delete_draft', { author: localStorage.getItem('login') || login })
                                 setSelectedProducts({})
-                                for (let i = 0; i < document.querySelector('#map').childNodes.length; ++i) {
-                                    document.querySelector('#map').childNodes[i].className = "pl-[5%] flex items-center text-center bg-slate-400 h-[60px] rounded-md mt-[10px] w-[60%] ml-auto mr-auto leading-[50px] font-medium"
-                                    document.querySelector('#map').childNodes[i].childNodes[0].innerHTML = ''
-                                    document.querySelector('#map').childNodes[i].childNodes[1].className = "ml-[20px] w-[60%] text-black overflow-x-scroll"
-                                }
+                                const array = await send_request('http://localhost:5000/return_all_products', {})
+                                const mp = array.array
+                                const req = await send_request('http://localhost:5000/return_request_from_user', { author: localStorage.getItem('login') || login })
+                                const mpreq = req.array
+                                const allreq = await send_request('http://localhost:5000/return_all_requests', {})
+                                const arrreq = allreq.array
+                                setProducts({ products: mp, value: count })
+                                setRequests(mpreq)
+                                setAllRequests(arrreq)
                             }
                         }
                         func()
@@ -348,7 +354,7 @@ export const List = () => {
                 </div>
             </div>
             {
-                request ? <div className="absolute m-auto top-0 left-0 right-0 bottom-0 w-[80vw] h-[80vh] bg-neutral-200 rounded-md border-[5px] border-lime-800">
+                request ? <div className="z-[1000000000000] absolute m-auto top-0 left-0 right-0 bottom-0 w-[80vw] h-[80vh] bg-neutral-200 rounded-md border-[5px] border-lime-800">
                     <div className="w-[150px] ml-auto mr-[0px]">
                         <img src={Copy} className="inline-block relative scale-[0.5] opacity-[0.5] ease-in-out duration-300 hover:cursor-pointer hover:opacity-[1]" onClick={() => {
                             let text = ''
@@ -384,7 +390,7 @@ export const List = () => {
                 </div> : <div />
             }
             {
-                (login === 'admin' || localStorage.getItem('login') === 'admin') ? <div className="sm:pl-[40px] lg:pl-[100px] mt-[70px]">
+                (login === 'admin' || localStorage.getItem('login') === 'admin') ? <div id='adminmenu' className="sm:pl-[40px] lg:pl-[100px] mt-[70px]">
                     <div className="flex gap-x-[10px]">
                         <img src={Icon} className={!flag4 ? "opacity-[0.9] object-contain scale-[0.75] pt-[3px] ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]" :
                             "opacity-[0.9] object-contain scale-[0.75] pt-[3px] rotate-90 ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]"
