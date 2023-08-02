@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=B612:wght@400;700&display=swap');
+
+@font-face {
+    font-family: "Mono";
+    src: url("fonts/ttf/JetBrainsMono-Bold.ttf");
+}
+
+p::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: rgb(141, 141, 146);
+}
+
+p::-webkit-scrollbar-thumb {
+    background-color: rgb(83, 83, 104);
+}
+
+#map::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: rgb(141, 141, 146);
+}
+
+#map::-webkit-scrollbar-thumb {
+    background-color: rgb(83, 83, 104);
+}
+
+*::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+    background-color: rgb(141, 141, 146);
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(83, 83, 104);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0;
+    /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    /* Firefox */
+}
