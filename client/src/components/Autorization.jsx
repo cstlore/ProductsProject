@@ -16,9 +16,9 @@ export const Autorization = () => {
         };
         let response
         if (!flag) {
-            response = await fetch('http://localhost:5000/api/login', requestOptions);
+            response = await fetch('/api/login', requestOptions);
         } else {
-            response = await fetch('http://localhost:5000/api/register', requestOptions);
+            response = await fetch('/api/register', requestOptions);
         }
         if (response.status === 200) {
             setLogin(document.querySelector('#name').value)

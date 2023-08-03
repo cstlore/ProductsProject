@@ -19,7 +19,7 @@ export const List = () => {
         return arr
     }
     window.onbeforeunload = async () => {
-        await send_request('http://localhost:5000/make_draft', { author: localStorage.getItem('login') || login, products: Object.values(selectedProducts) })
+        await send_request('/make_draft', { author: localStorage.getItem('login') || login, products: Object.values(selectedProducts) })
     }
     const { login, setLogin } = useContext(AppContext)
     const [group, setGroup] = useState(1)
@@ -29,18 +29,18 @@ export const List = () => {
     const [flag3, setFlag3] = useState(false)
     const [flag4, setFlag4] = useState(false)
     const [count, setCount] = useState(0);
-    const [allRequests, setAllRequests] = useState([] || send_request('http://localhost:5000/return_all_requests').array)
+    const [allRequests, setAllRequests] = useState([] || send_request('/return_all_requests').array)
     const [request, setRequest] = useState(null)
-    const [products, setProducts] = useState({ products: [] || send_request('http://localhost:5000/return_all_products').array, value: 0 })
-    const [requests, setRequests] = useState([] || send_request('http://localhost:5000/return_request_from_user', { author: localStorage.getItem('login') || login }).array)
+    const [products, setProducts] = useState({ products: [] || send_request('/return_all_products').array, value: 0 })
+    const [requests, setRequests] = useState([] || send_request('/return_request_from_user', { author: localStorage.getItem('login') || login }).array)
     const [selectedProducts, setSelectedProducts] = useState({})
     useEffect(() => {
         const func = async () => {
-            const array = await send_request('http://localhost:5000/return_all_products', {})
+            const array = await send_request('/return_all_products', {})
             const mp = array.array
-            const req = await send_request('http://localhost:5000/return_request_from_user', { author: localStorage.getItem('login') || login })
+            const req = await send_request('/return_request_from_user', { author: localStorage.getItem('login') || login })
             const mpreq = req.array
-            const allreq = await send_request('http://localhost:5000/return_all_requests', {})
+            const allreq = await send_request('/return_all_requests', {})
             const arrreq = allreq.array
             setProducts({ products: mp, value: count })
             setRequests(mpreq)
@@ -50,7 +50,7 @@ export const List = () => {
     }, [])
     useEffect(() => {
         const func = async () => {
-            const array = await send_request('http://localhost:5000/get_draft', { author: localStorage.getItem('login') || login })
+            const array = await send_request('/get_draft', { author: localStorage.getItem('login') || login })
             let val = {}
             for (let i = 0; i < array.products.length; ++i) {
                 val[array.products[i].name] = array.products[i]
@@ -62,12 +62,12 @@ export const List = () => {
     useEffect(() => {
         setTimeout(() => {
             const func = async () => {
-                await send_request('http://localhost:5000/make_draft', { author: localStorage.getItem('login') || login, products: Object.values(selectedProducts) })
-                const array = await send_request('http://localhost:5000/return_all_products', {})
+                await send_request('/make_draft', { author: localStorage.getItem('login') || login, products: Object.values(selectedProducts) })
+                const array = await send_request('/return_all_products', {})
                 const mp = array.array
-                const req = await send_request('http://localhost:5000/return_request_from_user', { author: localStorage.getItem('login') || login })
+                const req = await send_request('/return_request_from_user', { author: localStorage.getItem('login') || login })
                 const mpreq = req.array
-                const allreq = await send_request('http://localhost:5000/return_all_requests', {})
+                const allreq = await send_request('/return_all_requests', {})
                 const arrreq = allreq.array
                 setProducts({ products: mp, value: count })
                 setRequests(mpreq)
@@ -91,7 +91,7 @@ export const List = () => {
         }
     }, [request])
     return (
-        <div className="w-[100vw] h-[100vh] bg-neutral-900 overflow-y-scroll">
+        <div className="w-[100vw] h-[100vh] bg-neutral-100 overflow-y-scroll">
             <button id='blur1' className="absolute z-[100000000] w-[10vw] h-[5vh] bg-neutral-300 text-sm lg:text-base rounded-lg mt-[20px] right-[20px] font-medium ease-in-out duration-300 hover:scale-[1.1] hover:cursor-pointer" onClick={() => {
                 localStorage.removeItem('login')
                 setLogin(null)
@@ -100,8 +100,8 @@ export const List = () => {
             </button>
             <div id='blur2' className="sm:pl-[40px] lg:pl-[100px] pt-[10px]">
                 <div className="flex gap-x-[10px]">
-                    <img src={Icon} className={!flag ? "opacity-[0.9] scale-[0.75] pt-[3px] ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]" :
-                        "opacity-[0.9] scale-[0.75] pt-[3px] rotate-90 ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]"
+                    <img src={Icon} className={!flag ? "invert opacity-[0.9] scale-[0.75] pt-[3px] ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]" :
+                        "opacity-[0.9] invert scale-[0.75] pt-[3px] rotate-90 ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]"
                     } onClick={() => {
                         setFlag(!flag)
                         if (document.querySelector('#first').style.height === '75px') {
@@ -116,7 +116,7 @@ export const List = () => {
                             document.querySelector('#third').style.height = '50px'
                         }
                     }} />
-                    <p className="text-neutral-200 font-medium leading-[50px] xl:text-[2rem] sm:text-[1.5rem]">Добавить товар</p>
+                    <p className="text-neutral-700 font-medium leading-[50px] xl:text-[2rem] sm:text-[1.5rem]">Добавить товар</p>
                 </div>
                 <div id='first' className="h-[0px] overflow-hidden items-center ml-[60px] flex w-[80%] mt-[30px] gap-x-[20px] flex-start">
                     <div className={group !== 1 ? "rounded-full text-[0.5rem] md:text-[1rem] w-[20px] h-[20px] md:w-[40px] md:h-[40px] bg-neutral-200 text-center leading-[20px] md:leading-[40px] font-bold ease-in-out duration-300 hover:cursor-pointer hover:opacity-[0.9] hover:w-[100px] md:hover:w-[200px]" :
@@ -142,22 +142,20 @@ export const List = () => {
                     <div className={group !== 5 ? "rounded-full text-[0.5rem] md:text-[1rem] w-[20px] h-[20px] md:w-[40px] md:h-[40px] bg-neutral-200 text-center leading-[20px] md:leading-[40px] font-bold ease-in-out duration-300 hover:cursor-pointer hover:opacity-[0.9] hover:w-[100px] md:hover:w-[200px]" :
                         "rounded-full text-[0.5rem] md:text-[1rem] w-[20px] h-[20px] md:w-[40px] md:h-[40px] bg-lime-600 text-center leading-[20px] md:leading-[40px] font-bold ease-in-out duration-300 hover:cursor-pointer hover:opacity-[0.9] hover:w-[100px] md:hover:w-[200px]"
                     } onClick={() => { setGroup(5) }}>5</div>
-                    <p className="text-neutral-200 text-sm lg:text-lg font-medium leading-[50px] lg:leading-[50px]">Выберите группу</p>
+                    <p className="text-neutral-700 text-sm lg:text-lg font-medium leading-[50px] lg:leading-[50px]">Выберите группу</p>
                 </div>
-                <input id='second' className="h-[0px] text-sm md:text-base overflow-hidden ml-[58px] pl-[2px] w-[60%] mt-[20px] bg-transparent outline-none border-b-[0px] border-b-neutral-200 rounded-sm text-neutral-200" placeholder="Наименование товара здесь..." />
-                <div id='third' className="h-[0px] scale-[0.5] ml-[30px] md:scale-[1] overflow-hidden md:ml-[58px] bg-neutral-200 w-[100px] mt-[20px] text-center leading-[50px] font-medium rounded-full cursor-pointer ease-in-out duration-300 hover:animate-pulse" onClick={() => {
+                <input id='second' className="h-[0px] text-sm md:text-base overflow-hidden ml-[58px] pl-[2px] w-[60%] mt-[20px] bg-transparent outline-none border-b-[0px] border-b-neutral-200 rounded-sm text-neutral-700" placeholder="Наименование товара здесь..." />
+                <div id='third' className="h-[0px] scale-[0.5] ml-[30px] md:scale-[1] overflow-hidden md:ml-[58px] bg-neutral-300 w-[100px] mt-[20px] text-center leading-[50px] font-medium rounded-full cursor-pointer ease-in-out duration-300 hover:animate-pulse" onClick={() => {
                     const func = async () => {
                         if (document.querySelector('#second').value !== '') {
-                            send_request('http://localhost:5000/make_product', {
+                            await send_request('/make_product', {
                                 "name": document.querySelector('#second').value,
                                 "group": group,
                                 "author": localStorage.getItem('login') || login
                             })
-                            const ans = await send_request('http://localhost:5000/return_all_products', {})
-                            if (ans.array) {
-                                setProducts({ products: ans.array, value: count })
-                            }
-                            document.querySelector('#second').value = ""
+                            const ans = await send_request('/return_all_products', {})
+                            setProducts({ products: ans.array, value: count + 1 })
+                            document.querySelector('#second').value = ''
                         }
                     }
                     func()
@@ -165,8 +163,8 @@ export const List = () => {
             </div>
             <div id='blur3' className="w-[100vw] sm:pl-[40px] lg:pl-[100px] pt-[10px]">
                 <div className="flex gap-x-[10px]">
-                    <img src={Icon} className={!flag2 ? "opacity-[0.9] scale-[0.75] pt-[3px] ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]" :
-                        "opacity-[0.9] scale-[0.75] pt-[3px] rotate-90 ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]"
+                    <img src={Icon} className={!flag2 ? "invert opacity-[0.9] scale-[0.75] pt-[3px] ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]" :
+                        "invert opacity-[0.9] scale-[0.75] pt-[3px] rotate-90 ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]"
                     } onClick={() => {
                         setFlag2(!flag2)
                         if (document.querySelector('#first2').style.height === '75px') {
@@ -179,7 +177,7 @@ export const List = () => {
                             document.querySelector('#send').style.height = '50px'
                         }
                     }} />
-                    <p className="text-neutral-200 font-medium leading-[50px] xl:text-[2rem] sm:text-[1.5rem]">Составить заявку</p>
+                    <p className="text-neutral-700 font-medium leading-[50px] xl:text-[2rem] sm:text-[1.5rem]">Составить заявку</p>
                 </div>
                 <div id='first2' className="h-[0px] overflow-hidden items-center ml-[60px] flex w-[80%] mt-[30px] gap-x-[20px] flex-start">
                     <div className={groupp !== 1 ? "rounded-full text-[0.5rem] md:text-[1rem] w-[20px] h-[20px] md:w-[40px] md:h-[40px] bg-neutral-200 text-center leading-[20px] md:leading-[40px] font-bold ease-in-out duration-300 hover:cursor-pointer hover:opacity-[0.9] hover:w-[100px] md:hover:w-[200px]" :
@@ -205,7 +203,7 @@ export const List = () => {
                     <div className={groupp !== 5 ? "rounded-full text-[0.5rem] md:text-[1rem] w-[20px] h-[20px] md:w-[40px] md:h-[40px] bg-neutral-200 text-center leading-[20px] md:leading-[40px] font-bold ease-in-out duration-300 hover:cursor-pointer hover:opacity-[0.9] hover:w-[100px] md:hover:w-[200px]" :
                         "rounded-full text-[0.5rem] md:text-[1rem] w-[20px] h-[20px] md:w-[40px] md:h-[40px] bg-lime-600 text-center leading-[20px] md:leading-[40px] font-bold ease-in-out duration-300 hover:cursor-pointer hover:opacity-[0.9] hover:w-[100px] md:hover:w-[200px]"
                     } onClick={() => { setGroupp(5) }}>5</div>
-                    <p className="text-neutral-200 text-sm lg:text-lg font-medium leading-[50px] lg:leading-[50px]">Выберите группу</p>
+                    <p className="text-neutral-700 text-sm lg:text-lg font-medium leading-[50px] lg:leading-[50px]">Выберите группу</p>
                 </div>
                 <div className="ml-[0px] sm:ml-[-40px] lg:ml-[-100px] flex justify-center w-[100vw]">
                     <div id="third2" className="w-[600px] md:w-[800px] scale-[0.5] sm:scale-[0.7] md:scale-[1] h-[0px] ml-auto mr-auto bg-neutral-200 rounded-md mt-[-50px] md:mt-[20px] overflow-hidden">
@@ -236,7 +234,7 @@ export const List = () => {
                                             }}>
                                                 <div id='in' className="rounded-full ml-auto mr-auto w-[10px] h-[10px] ease-in-out duration-300 bg-neutral-400" />
                                             </div>
-                                            <p className="ml-[20px] w-[60%] text-neutral-300 overflow-x-scroll">{element.name}</p>
+                                            <p className="ml-[20px] w-[60%] h-[60px] text-neutral-300 overflow-x-scroll">{element.name}</p>
                                             <img className="opacity-[0.5] scale-[0.5] ease-in-out duration-300 hover:cursor-pointer hover:opacity-[1]" src={Minus} onClick={(e) => {
                                                 if (e.target.parentNode.childNodes[0].childNodes.length !== 0) {
                                                     const value = parseInt(e.target.parentNode.childNodes[3].value)
@@ -273,7 +271,7 @@ export const List = () => {
                                                 }
                                             }}>
                                             </div>
-                                            <p className="ml-[20px] w-[60%] overflow-x-scroll">{element.name}</p>
+                                            <p className="ml-[20px] w-[60%] h-[60px] overflow-x-scroll">{element.name}</p>
                                             <img className="opacity-[0.5] scale-[0.5] ease-in-out duration-300 hover:cursor-pointer hover:opacity-[1]" src={Minus} onClick={(e) => {
                                                 if (e.target.parentNode.childNodes[0].childNodes.length !== 0) {
                                                     const value = parseInt(e.target.parentNode.childNodes[3].value)
@@ -299,20 +297,20 @@ export const List = () => {
                     </div>
                 </div>
                 <div className="ml-[0px] sm:ml-[-40px] lg:ml-[-100px] flex justify-center w-[100vw]">
-                    <div id='send' className="h-[0px] mt-[-50px] scale-[0.75] md:scale-[1] overflow-hidden ml-auto mr-auto bg-neutral-200 w-[100px] md:mt-[20px] text-center leading-[50px] font-medium rounded-full cursor-pointer ease-in-out duration-300 hover:animate-pulse hover:scale-[1.1]" onClick={() => {
+                    <div id='send' className="h-[0px] mt-[-50px] scale-[0.75] md:scale-[1] overflow-hidden ml-auto mr-auto bg-neutral-300 w-[100px] md:mt-[20px] text-center leading-[50px] font-medium rounded-full cursor-pointer ease-in-out duration-300 hover:animate-pulse hover:scale-[1.1]" onClick={() => {
                         const func = async () => {
                             if (Object.getOwnPropertyNames(selectedProducts).length !== 0) {
-                                await send_request('http://localhost:5000/make_request', {
+                                await send_request('/make_request', {
                                     "author": localStorage.getItem('login') || login,
                                     "products": Object.values(selectedProducts)
                                 })
-                                await send_request('http://localhost:5000/delete_draft', { author: localStorage.getItem('login') || login })
+                                await send_request('/delete_draft', { author: localStorage.getItem('login') || login })
                                 setSelectedProducts({})
-                                const array = await send_request('http://localhost:5000/return_all_products', {})
+                                const array = await send_request('/return_all_products', {})
                                 const mp = array.array
-                                const req = await send_request('http://localhost:5000/return_request_from_user', { author: localStorage.getItem('login') || login })
+                                const req = await send_request('/return_request_from_user', { author: localStorage.getItem('login') || login })
                                 const mpreq = req.array
-                                const allreq = await send_request('http://localhost:5000/return_all_requests', {})
+                                const allreq = await send_request('/return_all_requests', {})
                                 const arrreq = allreq.array
                                 setProducts({ products: mp, value: count })
                                 setRequests(mpreq)
@@ -323,8 +321,8 @@ export const List = () => {
                     }} >Составить</div>
                 </div>
                 <div className="flex gap-x-[10px]">
-                    <img src={Icon} className={!flag3 ? "opacity-[0.9] scale-[0.75] pt-[3px] ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]" :
-                        "opacity-[0.9] scale-[0.75] pt-[3px] rotate-90 ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]"
+                    <img src={Icon} className={!flag3 ? "invert opacity-[0.9] scale-[0.75] pt-[3px] ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]" :
+                        "invert opacity-[0.9] scale-[0.75] pt-[3px] rotate-90 ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]"
                     } onClick={() => {
                         setFlag3(!flag3)
                         if (document.querySelector('#third3').style.height === '400px') {
@@ -333,7 +331,7 @@ export const List = () => {
                             document.querySelector('#third3').style.height = '400px'
                         }
                     }} />
-                    <p className="text-neutral-200 font-medium leading-[50px] xl:text-[2rem] sm:text-[1.5rem]">Отправленные заявки</p>
+                    <p className="text-neutral-700 font-medium leading-[50px] xl:text-[2rem] sm:text-[1.5rem]">Отправленные заявки</p>
                 </div>
                 <div className="ml-[0px] sm:ml-[-40px] lg:ml-[-100px] flex justify-center w-[100vw]">
                     <div id="third3" className="w-[600px] md:w-[800px] scale-[0.5] sm:scale-[0.7] md:scale-[1] h-[0px] ml-auto mr-auto bg-neutral-200 rounded-md mt-[-50px] md:mt-[20px] overflow-hidden">
@@ -390,10 +388,10 @@ export const List = () => {
                 </div> : <div />
             }
             {
-                (login === 'admin' || localStorage.getItem('login') === 'admin') ? <div id='adminmenu' className="sm:pl-[40px] lg:pl-[100px] mt-[70px]">
+                ((login === 'admin' || localStorage.getItem('login') === 'admin') || (login === 'tester' || localStorage.getItem('login') === 'tester')) ? <div id='adminmenu' className="sm:pl-[40px] lg:pl-[100px] mt-[70px]">
                     <div className="flex gap-x-[10px]">
-                        <img src={Icon} className={!flag4 ? "opacity-[0.9] object-contain scale-[0.75] pt-[3px] ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]" :
-                            "opacity-[0.9] object-contain scale-[0.75] pt-[3px] rotate-90 ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]"
+                        <img src={Icon} className={!flag4 ? "invert opacity-[0.9] object-contain scale-[0.75] pt-[3px] ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]" :
+                            "invert opacity-[0.9] object-contain scale-[0.75] pt-[3px] rotate-90 ease-in-out duration-300 hover:opacity-[1] hover:cursor-pointer hover:scale-[0.80]"
                         } onClick={() => {
                             setFlag4(!flag4)
                             if (document.querySelector('#shownadmin').style.height === '400px') {
@@ -402,7 +400,7 @@ export const List = () => {
                                 document.querySelector('#shownadmin').style.height = '400px'
                             }
                         }} />
-                        <p className="text-neutral-200 font-medium leading-[50px] xl:text-[2rem] sm:text-[1.5rem]">Заявки всех людей (функция доступна только администратору)</p>
+                        <p className="text-neutral-700 font-medium leading-[50px] xl:text-[2rem] sm:text-[1.5rem]">Заявки всех людей (функция доступна только администратору)</p>
                     </div>
                     <div className="ml-[0px] sm:ml-[-40px] lg:ml-[-100px] flex justify-center w-[100vw]">
                         <div id="shownadmin" className="w-[600px] md:w-[800px] scale-[0.5] sm:scale-[0.7] md:scale-[1] h-[0px] ml-auto mr-auto bg-neutral-200 rounded-md mt-[-50px] md:mt-[20px] overflow-hidden">
